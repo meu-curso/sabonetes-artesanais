@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Descubra Seu Perfil Artesanal</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    :root {
+      --primary-color: #fcb7af;
+      --secondary-color: #f97f6b;
+      --accent-color: #ffd166;
+      --text-color: #4a3c37;
+      --title-color: #5e4036;
+      --background-color: #fff8f6;
+      --white: #ffffff;
+      --success-color: #06d6a0;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #fff8f6 0%, #ffe8e0 100%);
+      color: var(--text-color);
+      overflow-x: hidden;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+      padding: 8px 0 6px 0;
+      box-shadow: 0 1px 8px rgba(0,0,0,0.1);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      height: auto;
+    }
+
+    .progress-bar {
+      width: 90%;
+      max-width: 600px;
+      height: 8px;
+      background: rgba(249, 127, 107, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary-color), var(--secondary-color), var(--accent-color));
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(249, 127, 107, 0.5);
+    }
+
+    .progress-text {
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--secondary-color);
+      text-align: center;
+    }
+
+    .main-wrapper {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      padding-top: 60px;
+      padding-bottom: 40px;
+      overflow-x: hidden;
+    }
+
+    .container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      padding: 15px;
+      position: relative;
+      flex: 1;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .hidden {
+      opacity: 0;
+      transform: translateY(40px);
+      pointer-events: none;
+      position: absolute;
+      width: 100%;
+    }
+
+    .bg-decoration {
+      position: fixed;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      opacity: 0.1;
+      z-index: 0;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .bg-decoration:nth-child(1) {
+      background: var(--primary-color);
+      top: -100px;
+      left: -100px;
+    }
+
+    .bg-decoration:nth-child(2) {
+      background: var(--secondary-color);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 2s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-30px) scale(1.1); }
+    }
+
+    h1 {
+      color: var(--title-color);
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 0 0 20px 0;
+      line-height: 1.2;
+      animation: slideDown 0.8s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    h2 {
+      color: var(--title-color);
+      font-size: 1.8rem;
+      font-weight: 600;
+      margin: 0 0 30px 0;
+      line-height: 1.3;
+      position: relative;
+      z-index: 1;
+    }
+
+    p {
+      margin: 0 0 25px 0;
+      line-height: 1.7;
+      font-size: 1.1rem;
+      max-width: 600px;
+      position: relative;
+      z-index: 1;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    button {
+      background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+      color: white;
+      border: none;
+      padding: 18px 35px;
+      margin: 10px;
+      border-radius: 50px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 4px 15px rgba(249, 127, 107, 0.3);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+
+    button:hover::before {
+      left: 100%;
+    }
+
+    button:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(249, 127, 107, 0.4);
+    }
+
+    button:active {
+      transform: translateY(-1px);
+    }
+
+    .info-box {
+      background: var(--white);
+      border-radius: 25px;
+      padding: 40px;
+      margin: 20px 0;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      max-width: 650px;
+      width: 90%;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-box::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #fcb7af, #f97f6b, #ffd166, #06d6a0);
+    }
+
+    .info-box h3 {
+      color: var(--secondary-color);
+      margin: 20px 0;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+
+    .info-icon {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      display: block;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .highlight {
+      background: linear-gradient(120deg, #ffd166, #fcb7af);
+      padding: 4px 12px;
+      border-radius: 8px;
+      font-weight: 700;
+      color: var(--title-color);
+      display: inline-block;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .stat-item {
+      padding: 20px;
+      background: linear-gradient(135deg, #fff8f6, #ffffff);
+      border-radius: 15px;
+      min-width: 140px;
+      transition: transform 0.3s;
+    }
+
+    .stat-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      color: var(--text-color);
+      line-height: 1.3;
+    }
+
+    .testimonial {
+      font-style: italic;
+      background: linear-gradient(135deg, #fff8f6, #ffffff);
+      padding: 25px;
+      border-radius: 15px;
+      margin: 20px 0;
+      position: relative;
+      border-left: 4px solid var(--secondary-color);
+      transition: transform 0.3s;
+    }
+
+    .testimonial:hover {
+      transform: scale(1.02);
+    }
+
+    .testimonial::before {
+      content: '"';
+      font-size: 3rem;
+      color: var(--primary-color);
+      position: absolute;
+      top: 10px;
+      left: 15px;
+      opacity: 0.3;
+    }
+
+    .author {
+      text-align: right;
+      font-weight: 600;
+      color: var(--secondary-color);
+      margin-top: 15px;
+      font-style: normal;
+    }
+
+    .result {
+      max-width: 700px;
+      width: 90%;
+      background: var(--white);
+      padding: 50px;
+      border-radius: 30px;
+      box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+      animation: scaleIn 0.8s ease forwards;
+      position: relative;
+      overflow: hidden;
+      z-index: 10;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.9);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    .result h2 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+    }
+
+    .btn-final {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 20px 40px;
+      background: linear-gradient(135deg, var(--secondary-color), #ff4444);
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 1.15rem;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(249, 127, 107, 0.4);
+      animation: pulse 2s infinite;
+    }
+
+    .btn-final:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 12px 35px rgba(249, 127, 107, 0.5);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 8px 25px rgba(249, 127, 107, 0.4); }
+      50% { box-shadow: 0 8px 35px rgba(249, 127, 107, 0.6); }
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(252, 183, 175, 0.2);
+      border-top: 5px solid var(--secondary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 25px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading-messages {
+      position: relative;
+      min-height: 120px;
+      margin: 30px 0;
+    }
+
+    .loading-message {
+      position: absolute;
+      width: 100%;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.6s ease;
+      font-weight: 500;
+      font-size: 1.15rem;
+      padding: 15px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, rgba(255, 248, 246, 0.9), rgba(255, 255, 255, 0.9));
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .loading-message.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 16px;
+      background: linear-gradient(135deg, var(--success-color), #00b894);
+      color: white;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin: 5px;
+    }
+
+    .offer-box {
+      background: linear-gradient(135deg, #fff8f6, #ffffff);
+      padding: 25px;
+      border-radius: 20px;
+      margin: 25px 0;
+      border: 3px dashed var(--secondary-color);
+      position: relative;
+    }
+
+    .discount-badge {
+      position: absolute;
+      top: -15px;
+      right: 20px;
+      background: linear-gradient(135deg, #ff4444, #ff6b6b);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+    }
+
+    footer {
+      text-align: center;
+      background: linear-gradient(to top, rgba(255,255,255,0.95), rgba(255,255,255,0.8));
+      color: var(--text-color);
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 -1px 5px rgba(0,0,0,0.05);
+      height: auto;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: var(--primary-color);
+      position: fixed;
+      top: -10px;
+      z-index: 1000;
+      animation: confetti-fall linear forwards;
+    }
+
+    @keyframes confetti-fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+
+    /* Melhorias responsivas */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+      }
+
+      h1 { 
+        font-size: 2rem;
+        margin-bottom: 15px;
+      }
+
+      h2 { 
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+      }
+
+      .info-box, .result { 
+        padding: 25px 20px;
+        margin: 15px 0;
+      }
+
+      .info-icon { 
+        font-size: 3rem;
+        margin-bottom: 15px;
+      }
+
+      .stat-number { font-size: 2rem; }
+      
+      button { 
+        font-size: 1rem;
+        padding: 16px 25px;
+        margin: 8px 0;
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .progress-text { 
+        font-size: 0.75rem;
+        padding: 6px 12px;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .stat-item {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 10px 5px;
+        width: 100%;
+        margin-bottom: 30px;
+      }
+
+      .main-wrapper {
+        padding-top: 45px;
+        padding-bottom: 35px;
+      }
+
+      /* Evitar sobreposição de elementos */
+      .hidden {
+        display: none;
+      }
+
+      h1 { 
+        font-size: 1.4rem;
+        line-height: 1.3;
+        margin-bottom: 12px;
+        padding: 0 5px;
+      }
+
+      /* Ajustes para hovers em dispositivos móveis */
+      button:hover, .btn-final:hover {
+        transform: none;
+        box-shadow: 0 4px 15px rgba(249, 127, 107, 0.3);
+      }
+
+      button::after, .btn-final::after {
+        display: none; /* Remove efeito de brilho em mobile */
+      }
+
+      .stat-item:hover, .info-box:hover, .testimonial:hover {
+        transform: none;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+
+      h2 { 
+        font-size: 1.3rem;
+        line-height: 1.4;
+        padding: 0 10px;
+        margin-bottom: 20px;
+      }
+
+      h3 {
+        font-size: 1.2rem;
+        line-height: 1.4;
+        margin-bottom: 15px;
+      }
+
+      p { 
+        font-size: 0.95rem;
+        line-height: 1.6;
+        padding: 0 5px;
+      }
+
+      .info-box { 
+        padding: 12px;
+        border-radius: 12px;
+        margin: 8px 0;
+        width: 100%;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+
+      .result { 
+        padding: 12px;
+        border-radius: 12px;
+        width: 100%;
+        margin: 8px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      }
+
+      .progress-container {
+        padding: 6px 0 4px 0;
+      }
+
+      .progress-text {
+        font-size: 0.7rem;
+        margin-bottom: 4px;
+      }
+
+      .progress-bar {
+        height: 6px;
+      }
+
+      button { 
+        padding: 12px 20px;
+        font-size: 0.95rem;
+        margin: 5px 0;
+        width: 100%;
+        white-space: normal;
+        height: auto;
+      }
+
+      .btn-final { 
+        padding: 15px 20px;
+        font-size: 1rem;
+        white-space: normal;
+        height: auto;
+      }
+
+      .testimonial {
+        padding: 15px;
+        font-size: 0.9rem;
+        margin: 10px 0;
+      }
+
+      .loading-message {
+        font-size: 0.85rem;
+        padding: 10px;
+        margin: 8px 0;
+      }
+
+      .discount-badge {
+        position: static;
+        font-size: 0.85rem;
+        padding: 6px 12px;
+        width: fit-content;
+        margin: 0 auto 15px auto;
+        display: block;
+      }
+
+      .stats {
+        flex-direction: column;
+        gap: 8px;
+        margin: 12px 0;
+      }
+      
+      /* Ajustes para evitar sobreposição de texto */
+      .offer-box {
+        padding-top: 12px;
+      }
+
+      .info-box h3 {
+        font-size: 1.3rem;
+        margin: 15px 0;
+      }
+
+      .stat-item {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 5px;
+      }
+
+      .stat-number {
+        font-size: 1.6rem;
+      }
+
+      .stat-label {
+        font-size: 0.8rem;
+        margin-top: 3px;
+      }
+
+      .offer-box {
+        padding: 12px;
+        margin: 12px 0;
+        border-width: 2px;
+      }
+
+      /* Melhorias na legibilidade do texto */
+      p {
+        font-size: 0.9rem;
+        line-height: 1.5;
+      }
+
+      ul li {
+        font-size: 0.85rem;
+        line-height: 1.4;
+        margin: 6px 0;
+      }
+
+      .highlight {
+        padding: 2px 6px;
+        margin: 0 2px;
+      }
+
+      .progress-text {
+        font-size: 0.75rem;
+        padding: 5px 10px;
+      }
+
+      .bg-decoration {
+        width: 200px;
+        height: 200px;
+      }
+
+      .loading-messages {
+        min-height: 100px;
+      }
+
+      footer {
+        padding: 20px 15px;
+        font-size: 0.8rem;
+      }
+    }
+
+    @media (max-width: 320px) {
+      h1 {
+        font-size: 1.4rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      .container {
+        padding: 10px;
+      }
+
+      button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+      }
+
+      .info-box, .result {
+        padding: 12px;
+      }
+    }
+
+    .discount-badge {
+      animation: pulse-urgent 2s infinite;
+    }
+
+    @keyframes pulse-urgent {
+      0%, 100% { 
+        transform: scale(1);
+        box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+      }
+      50% { 
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(255, 68, 68, 0.6);
+      }
+    }
+
+    button, .btn-final {
+      position: relative;
+      overflow: hidden;
+    }
+
+    @media (hover: hover) {
+      button::after, .btn-final::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: linear-gradient(
+          45deg,
+          transparent,
+          rgba(255,255,255,0.1),
+          transparent
+        );
+        transform: rotate(45deg);
+        animation: shine 3s infinite;
+      }
+    }
+
+    @keyframes shine {
+      0% {
+        transform: translateX(-100%) rotate(45deg);
+      }
+      100% {
+        transform: translateX(100%) rotate(45deg);
+      }
+    }
+
+    /* Otimizações para telas pequenas */
+    @media (max-width: 360px) {
+      body {
+        font-size: 14px;
+      }
+
+      .container {
+        padding: 8px 5px;
+      }
+
+      .info-box, .result {
+        padding: 10px;
+        margin: 8px 0;
+      }
+
+      button, .btn-final {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        margin: 5px 0;
+      }
+
+      .discount-badge {
+        position: static;
+        width: fit-content;
+        margin: 5px auto 15px auto;
+        font-size: 0.8rem;
+        padding: 5px 10px;
+      }
+
+      .progress-container {
+        padding: 5px 0;
+      }
+
+      .progress-text {
+        font-size: 0.7rem;
+        margin-bottom: 3px;
+      }
+
+      .testimonial {
+        padding: 12px;
+        font-size: 0.85rem;
+        margin: 8px 0;
+      }
+
+      .stat-item {
+        padding: 10px;
+        margin: 5px 0;
+      }
+
+      .highlight {
+        display: inline;
+        padding: 1px 4px;
+        border-radius: 4px;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+        margin-bottom: 10px;
+      }
+
+      h2 {
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+      }
+
+      h3 {
+        font-size: 1rem;
+      }
+
+      .loading-messages {
+        min-height: 80px;
+      }
+
+      footer {
+        padding: 5px 8px;
+        font-size: 0.7rem;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-decoration"></div>
+  <div class="bg-decoration"></div>
+
+  <div class="progress-container">
+    <div class="progress-text" id="progress-text">Vamos começar!</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress"></div>
+    </div>
+  </div>
+
+  <div class="main-wrapper">
+    <!-- Tela 1 -->
+    <div class="container" id="intro">
+      <h1>✨ Transforme Sabonetes em Renda Extra! ✨</h1>
+      <div class="info-box" style="margin-bottom: 25px;">
+        <p style="font-size: 1.2rem; color: var(--secondary-color); font-weight: 600;">
+          🎯 Oportunidade Única: Aprenda a criar sabonetes artesanais exclusivos e lucre até R$ 3.000/mês!
+        </p>
+        <div class="stats" style="margin: 20px 0;">
+          <div class="stat-item">
+            <span class="stat-number">97%</span>
+            <span class="stat-label">das alunas vendem no 1º mês</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">R$89</span>
+            <span class="stat-label">lucro médio por sabonete</span>
+          </div>
+        </div>
+        <p>Em apenas <strong>2 minutos</strong>, descubra seu <span class="highlight">perfil artesanal</span> e receba um plano personalizado para iniciar seu negócio!</p>
+      </div>
+      <button onclick="nextScreen('q1', 10, 'Vamos lá!')" style="font-size: 1.2rem;">
+        🚀 QUERO DESCOBRIR MEU POTENCIAL
+      </button>
+      <div style="margin-top: 20px; background: rgba(255,255,255,0.9); padding: 15px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+        <p style="font-size: 1rem; color: var(--secondary-color); font-weight: 600; margin: 0;">
+          ⭐ Já transformamos a vida de + 2.347 mulheres:
+        </p>
+        <div class="testimonial" style="margin: 15px 0 0 0; font-size: 0.9rem;">
+          "Comecei do zero e hoje faturo R$ 4.500/mês trabalhando de casa!" - Maria, 35 anos
+        </div>
+      </div>
+    </div>
+
+    <!-- Pergunta 1 -->
+    <div class="container hidden" id="q1">
+      <h2>Você já fez sabonetes artesanais antes?</h2>
+      <button onclick="nextScreen('q2', 20, 'Ótimo!')">✅ Sim, já faço e quero aprimorar</button>
+      <button onclick="nextScreen('q2', 20, 'Ótimo!')">🌱 Não, quero aprender do zero</button>
+      <button onclick="nextScreen('q2', 20, 'Ótimo!')">🤔 Ainda não, mas tenho curiosidade</button>
+    </div>
+
+    <!-- Pergunta 2 -->
+    <div class="container hidden" id="q2">
+      <h2>Qual é o seu principal objetivo?</h2>
+      <button onclick="nextScreen('q3', 30, 'Excelente!')">💰 Ter uma renda extra (R$ 500-2000/mês)</button>
+      <button onclick="nextScreen('q3', 30, 'Excelente!')">🏢 Abrir meu próprio negócio</button>
+      <button onclick="nextScreen('q3', 30, 'Excelente!')">🎨 Aprender algo relaxante e criativo</button>
+      <button onclick="nextScreen('q3', 30, 'Excelente!')">🔄 Mudar completamente de carreira</button>
+    </div>
+
+    <!-- Pergunta 3 -->
+    <div class="container hidden" id="q3">
+      <h2>Quanto tempo por semana você pode se dedicar?</h2>
+      <button onclick="nextScreen('info1', 40, 'Perfeito!')">⏰ 1 a 3 horas</button>
+      <button onclick="nextScreen('info1', 40, 'Perfeito!')">💼 4 a 6 horas</button>
+      <button onclick="nextScreen('info1', 40, 'Perfeito!')">🎯 Mais de 6 horas</button>
+    </div>
+
+    <!-- Informação 1 -->
+    <div class="container hidden" id="info1">
+      <div class="info-box">
+        <span class="info-icon">🚀</span>
+        <h3>MERCADO EM EXPLOSÃO: SUA GRANDE CHANCE!</h3>
+        
+        <div style="background: linear-gradient(135deg, #fff8f6, #ffffff); padding: 20px; border-radius: 15px; margin: 20px 0; border: 2px dashed var(--secondary-color);">
+          <p style="font-size: 1.1rem; font-weight: 600; color: var(--secondary-color);">
+            💡 Você sabia?
+          </p>
+          <p>O mercado de sabonetes artesanais cresceu <span class="highlight">300% nos últimos 2 anos</span>! E a demanda continua aumentando!</p>
+        </div>
+        
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-number">83%</span>
+            <span class="stat-label">das pessoas preferem produtos artesanais e naturais</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">R$ 150</span>
+            <span class="stat-label">gasto médio mensal por cliente</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number">45%</span>
+            <span class="stat-label">margem de lucro média por produto</span>
+          </div>
+        </div>
+        
+        <div style="margin: 25px 0; padding: 20px; background: linear-gradient(135deg, #fff8f6, #ffffff); border-radius: 15px; box-shadow: 0 5px 20px rgba(249, 127, 107, 0.15);">
+          <h4 style="color: var(--secondary-color); margin-bottom: 15px;">✨ Por que começar AGORA?</h4>
+          <ul style="list-style: none; padding: 0; text-align: left;">
+            <li style="margin: 10px 0;">✅ Mercado em crescimento exponencial</li>
+            <li style="margin: 10px 0;">✅ Baixo investimento inicial</li>
+            <li style="margin: 10px 0;">✅ Trabalhe de casa, no seu tempo</li>
+            <li style="margin: 10px 0;">✅ Suporte completo para iniciar</li>
+          </ul>
+        </div>
+        
+        <div class="badge" style="font-size: 1.1rem; padding: 12px 25px;">
+          🎯 Momento Perfeito para Começar!
+        </div>
+      </div>
+      <button onclick="nextScreen('q4', 50, 'Continuando...')" style="font-size: 1.1rem; margin-top: 25px;">
+        🚀 QUERO APROVEITAR ESSA OPORTUNIDADE →
+      </button>
+    </div>
+
+    <!-- Pergunta 4 -->
+    <div class="container hidden" id="q4">
+      <h2>Qual o seu maior desafio hoje?</h2>
+      <button onclick="nextScreen('q5', 60, 'Entendendo...')">😰 Não sei por onde começar</button>
+      <button onclick="nextScreen('q5', 60, 'Entendendo...')">💸 Falta de dinheiro para investir</button>
+      <button onclick="nextScreen('q5', 60, 'Entendendo...')">⏰ Pouco tempo disponível</button>
+      <button onclick="nextScreen('q5', 60, 'Entendendo...')">📢 Não sei como vender</button>
+    </div>
+
+    <!-- Pergunta 5 -->
+    <div class="container hidden" id="q5">
+      <h2>Onde você prefere vender seus produtos?</h2>
+      <button onclick="nextScreen('info2', 70, 'Quase lá!')">📱 Instagram e redes sociais</button>
+      <button onclick="nextScreen('info2', 70, 'Quase lá!')">🏪 Feiras e eventos locais</button>
+      <button onclick="nextScreen('info2', 70, 'Quase lá!')">🛍️ Loja online própria</button>
+      <button onclick="nextScreen('info2', 70, 'Quase lá!')">👥 Para amigos e familiares</button>
+    </div>
+
+    <!-- Informação 2 -->
+    <div class="container hidden" id="info2">
+      <div class="info-box">
+        <span class="info-icon">💫</span>
+        <h3>HISTÓRIAS QUE INSPIRAM!</h3>
+        
+        <div class="testimonial">
+          Eu era caixa de mercado e hoje tenho minha própria marca de sabonetes. Comprei meu primeiro carro com o lucro dos primeiros 6 meses!
+          <div class="author">- Carla, 32 anos</div>
+        </div>
+        
+        <div class="testimonial">
+          Como mãe solo, consegui conciliar o cuidado com minha filha e montar um negócio que hoje paga nossas contas. Trabalho de casa no meu tempo!
+          <div class="author">- Juliana, 28 anos</div>
+        </div>
+        
+        <p><span class="highlight">Elas conseguiram e você também pode!</span> O segredo é começar com as técnicas certas e muita vontade de aprender.</p>
+      </div>
+      <button onclick="nextScreen('q6', 80, 'Finalizando...')">Continuar →</button>
+    </div>
+
+    <!-- Pergunta 6 -->
+    <div class="container hidden" id="q6">
+      <h2>Qual estilo de sabonete mais combina com você?</h2>
+      <button onclick="showResult('criativa', 90)">🌸 Natural e aromático</button>
+      <button onclick="showResult('empreendedora', 90)">✨ Moderno e estiloso</button>
+      <button onclick="showResult('artesã', 90)">🎨 Artístico e único</button>
+      <button onclick="showResult('tradicional', 90)">🌿 Tradicional e terapêutico</button>
+    </div>
+
+    <!-- Resultado -->
+    <div class="container hidden" id="resultado">
+      <div class="result" id="result-box">
+        <div class="loader"></div>
+        <h2>Preparando seu resultado personalizado...</h2>
+        
+        <div class="loading-messages" id="loading-messages">
+          <div class="loading-message" id="message1">🔍 Analisando suas respostas...</div>
+          <div class="loading-message" id="message2">✨ <strong>97%</strong> das alunas começam a vender em 30 dias!</div>
+          <div class="loading-message" id="message3">🚀 Criando seu plano personalizado...</div>
+          <div class="loading-message" id="message4">💰 <strong>R$ 1.847/mês</strong> é a renda média!</div>
+          <div class="loading-message" id="message5">🎁 Preparando bônus exclusivos...</div>
+        </div>
+        
+        <p>Estamos criando algo especial para você!</p>
+      </div>
+    </div>
+  </div>
+  
+  <footer>© 2025 Curso Sabonetes Artesanais - Transforme sua paixão em lucro 💖</footer>
+
+  <script>
+    let currentProgress = 0;
+
+    function updateProgress(percent, text) {
+      currentProgress = percent;
+      document.getElementById('progress').style.width = percent + '%';
+      if (text) {
+        document.getElementById('progress-text').textContent = text;
+      }
+    }
+
+    function nextScreen(nextId, progressPercent, progressText) {
+      const current = document.querySelector('.container:not(.hidden)');
+      const next = document.getElementById(nextId);
+      
+      current.classList.add('hidden');
+      updateProgress(progressPercent, progressText);
+      
+      setTimeout(() => {
+        next.classList.remove('hidden');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 400);
+    }
+
+    function showResult(type, progressPercent) {
+      nextScreen('resultado', progressPercent, 'Finalizando...');
+      startLoadingMessages();
+      
+      setTimeout(() => createConfetti(), 1000);
+      
+      setTimeout(() => {
+        updateProgress(100, 'Completo! ✓');
+        const resultBox = document.getElementById('result-box');
+        let title = "";
+        let text = "";
+        let icon = "";
+        let bonus = "";
+
+        if (type === "criativa") {
+          icon = "🌸";
+          title = "VOCÊ É UMA CRIADORA NATURAL!";
+          text = "Seu talento para transformar ingredientes simples em obras de arte é impressionante! Com apenas algumas horas por semana, você pode criar sabonetes que contam histórias e expressam sua personalidade única.";
+          bonus = "Kit Receitas Exclusivas + Guia de Aromas + Técnicas Naturais";
+        } else if (type === "empreendedora") {
+          icon = "💼";
+          title = "VOCÊ É UMA ARTESÃ EMPREENDEDORA!";
+          text = "Sua visão de negócio é seu maior trunfo! Você não só cria produtos incríveis, mas também enxerga oportunidades. Com dedicação, você pode construir um império de sabonetes!";
+          bonus = "Planilha Financeira + Estratégias de Vendas + Marketing Digital";
+        } else if (type === "artesã") {
+          icon = "🧼";
+          title = "VOCÊ É UMA ARTISTA DAS ESSÊNCIAS!";
+          text = "Sua dedicação é inspiradora! Com mais tempo disponível, você pode explorar técnicas avançadas e criar verdadeiras obras-primas em forma de sabonete.";
+          bonus = "Curso Avançado de Técnicas + Mentoria Personalizada + Certificado Pro";
+        } else {
+          icon = "🌿";
+          title = "VOCÊ É UMA TERAPÊUTA NATURAL!";
+          text = "Seu amor pela natureza e cuidado com o próximo se refletem em cada criação! Você tem o dom de transformar ingredientes naturais em produtos que curam e relaxam.";
+          bonus = "Guia de Óleos Essenciais + Aromaterapia + Formulações Terapêuticas";
+        }
+
+        resultBox.innerHTML = `
+          <div style="font-size: 5rem; margin-bottom: 20px; animation: bounce 2s infinite;">${icon}</div>
+          <h2 style="color: #f97f6b; font-size: 2rem; line-height: 1.3; margin-bottom: 25px;">${title}</h2>
+          
+          <div style="background: linear-gradient(135deg, #fff8f6, #ffffff); padding: 25px; border-radius: 15px; margin-bottom: 30px; text-align: left;">
+            <p style="font-size: 1.15rem; margin: 0 0 20px 0; line-height: 1.8;">${text}</p>
+            
+            <div style="border-top: 2px dashed var(--secondary-color); padding-top: 20px; margin-top: 20px;">
+              <p style="font-weight: 600; color: var(--secondary-color); margin-bottom: 15px;">
+                💫 Seu potencial de ganhos:
+              </p>
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin: 10px 0;">💰 Primeiros 30 dias: R$ 1.000 - R$ 2.000</li>
+                <li style="margin: 10px 0;">💎 Após 3 meses: R$ 3.000 - R$ 5.000</li>
+                <li style="margin: 10px 0;">🚀 Potencial anual: R$ 40.000+</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="offer-box" style="background: linear-gradient(135deg, #fff8f6, #ffffff); border: 3px dashed var(--secondary-color);">
+            <div class="discount-badge" style="font-size: 1.2rem; padding: 12px 25px;">
+              🎯 OFERTA ESPECIAL: 70% OFF
+            </div>
+            
+            <h3 style="color: var(--secondary-color); font-size: 1.4rem; margin: 20px 0;">
+              🎁 SEUS BÔNUS EXCLUSIVOS:
+            </h3>
+            
+            <div style="text-align: left; padding: 20px; background: rgba(255,255,255,0.8); border-radius: 12px; margin: 15px 0;">
+              <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">
+                ${bonus}
+              </p>
+              
+              <ul style="list-style: none; padding: 0;">
+                <li style="margin: 12px 0;">✨ Acesso Vitalício ao Curso</li>
+                <li style="margin: 12px 0;">👥 Comunidade VIP no WhatsApp</li>
+                <li style="margin: 12px 0;">🎯 Mentoria Individual</li>
+                <li style="margin: 12px 0;">📱 Suporte Prioritário</li>
+                <li style="margin: 12px 0;">🏆 Certificado de Conclusão</li>
+              </ul>
+            </div>
+          </div>
+
+          <div style="margin: 30px 0; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px;">
+            <p style="font-size: 1.1rem; color: var(--secondary-color); font-weight: 600;">
+              ⚡ Oferta por tempo limitado!
+            </p>
+            <div style="font-size: 1.8rem; font-weight: 700; color: #ff4444; margin: 15px 0;">
+              <span id="timer">14:59</span>
+            </div>
+            <p style="font-size: 0.9rem; color: #666;">
+              Após esse tempo, o valor volta ao normal
+            </p>
+          </div>
+
+          <a href="https://pay.kiwify.com.br/seu-checkout" class="btn-final" style="font-size: 1.3rem; padding: 25px 40px;">
+            🚀 QUERO COMEÇAR AGORA COM 70% OFF!
+          </a>
+          
+          <div style="margin-top: 25px; padding: 20px; background: rgba(255,255,255,0.9); border-radius: 15px; text-align: left;">
+            <p style="font-weight: 600; color: var(--secondary-color); margin-bottom: 15px;">
+              ✅ Sua compra está 100% segura:
+            </p>
+            <ul style="list-style: none; padding: 0;">
+              <li style="margin: 8px 0;">🛡️ Garantia incondicional de 7 dias</li>
+              <li style="margin: 8px 0;">🔒 Pagamento 100% seguro</li>
+              <li style="margin: 8px 0;">💳 Parcelamento em até 12x</li>
+              <li style="margin: 8px 0;">📚 Acesso imediato ao conteúdo</li>
+            </ul>
+          </div>
+        `;
+
+        startTimer();
+      }, 4000);
+    }
+
+    function startLoadingMessages() {
+      const messages = document.querySelectorAll('.loading-message');
+      messages.forEach((msg, index) => {
+        setTimeout(() => {
+          messages.forEach(m => m.classList.remove('active'));
+          msg.classList.add('active');
+        }, index * 1000);
+      });
+    }
+
+    function startTimer() {
+      let minutes = 14;
+      let seconds = 59;
+      const timerElement = document.getElementById('timer');
+      
+      const timerInterval = setInterval(() => {
+        if (seconds === 0) {
+          if (minutes === 0) {
+            clearInterval(timerInterval);
+            return;
+          }
+          minutes--;
+          seconds = 59;
+        } else {
+          seconds--;
+        }
+        
+        timerElement.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+      }, 1000);
+    }
+
+    function createConfetti() {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * window.innerWidth + 'px';
+        confetti.style.backgroundColor = ['#fcb7af', '#f97f6b', '#ffd166', '#06d6a0'][Math.floor(Math.random() * 4)];
+        confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 5000);
+      }
+    }
+  </script>
+</body>
+</html>
