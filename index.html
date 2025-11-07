@@ -1794,9 +1794,26 @@
     // Modal de Saída
     let exitModalShown = false;
     
+    // Detecta tanto movimento do mouse quanto histórico de navegação
     document.addEventListener('mouseleave', function(e) {
       if (e.clientY < 0 && !exitModalShown) {
         showExitModal();
+      }
+    });
+
+    // Detecta quando usuário tenta sair em dispositivos móveis
+    window.addEventListener('popstate', function() {
+      if (!exitModalShown) {
+        showExitModal();
+      }
+    });
+
+    // Detecta clique no botão voltar do navegador
+    window.addEventListener('beforeunload', function(e) {
+      if (!exitModalShown) {
+        showExitModal();
+        e.preventDefault();
+        e.returnValue = '';
       }
     });
 
@@ -1810,64 +1827,77 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0,0,0,0.8);
+        background: rgba(0,0,0,0.9);
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 9999;
         animation: fadeIn 0.3s ease;
+        padding: 15px;
       `;
 
       const content = document.createElement('div');
       content.style.cssText = `
         background: white;
-        padding: 30px;
+        padding: 20px;
         border-radius: 20px;
-        max-width: 90%;
+        max-width: 95%;
         width: 500px;
         text-align: center;
         position: relative;
         animation: scaleIn 0.3s ease;
+        margin: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
       `;
 
       content.innerHTML = `
-        <div style="position: absolute; top: -30px; right: -30px;">
-          <button onclick="closeExitModal(this)" style="background: white; border: none; width: 40px; height: 40px; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.2); cursor: pointer; font-size: 20px; color: #666;">×</button>
+        <div style="position: absolute; top: 10px; right: 10px;">
+          <button onclick="closeExitModal(this)" style="background: rgba(255,255,255,0.9); border: none; width: 36px; height: 36px; border-radius: 50%; box-shadow: 0 2px 10px rgba(0,0,0,0.2); cursor: pointer; font-size: 18px; color: #666; display: flex; align-items: center; justify-content: center;">×</button>
         </div>
         
-        <div style="font-size: 3rem; margin-bottom: 20px;">🎁</div>
+        <div style="animation: bounce 2s infinite;">
+          <div style="font-size: clamp(2.5rem, 5vw, 3.5rem); margin-bottom: 15px;">🎁</div>
+        </div>
         
-        <h3 style="color: var(--secondary-color); font-size: 1.6rem; margin-bottom: 15px;">
+        <h3 style="color: var(--secondary-color); font-size: clamp(1.2rem, 4vw, 1.6rem); margin-bottom: 15px; line-height: 1.3;">
           ESPERE! Oferta Especial
         </h3>
         
-        <div style="background: linear-gradient(135deg, #ff4444, #ff6b6b); color: white; padding: 15px; border-radius: 12px; margin: 20px 0;">
-          <p style="font-size: 1.8rem; font-weight: 700; margin: 0;">
-            + 10% OFF
+        <div style="background: linear-gradient(135deg, #ff4444, #ff6b6b); color: white; padding: 15px; border-radius: 12px; margin: 15px 0; box-shadow: 0 5px 15px rgba(255,68,68,0.2);">
+          <p style="font-size: clamp(1.4rem, 5vw, 1.8rem); font-weight: 800; margin: 0; text-shadow: 1px 1px 2px rgba(0,0,0,0.1);">
+            + 10% OFF EXTRA
           </p>
-          <p style="margin: 5px 0 0 0; font-size: 0.9rem;">
-            nos próximos 15 minutos
+          <p style="margin: 5px 0 0 0; font-size: clamp(0.8rem, 3vw, 0.9rem);">
+            EXPIRA EM 15 MINUTOS!
           </p>
         </div>
         
-        <p style="font-size: 1.1rem; color: #666; margin: 20px 0;">
-          Aproveite este desconto extra exclusivo e comece sua jornada agora!
+        <p style="font-size: clamp(0.9rem, 3vw, 1.1rem); color: #666; margin: 15px 0; padding: 0 10px;">
+          Não perca esta chance única de começar sua jornada com um super desconto!
         </p>
         
         <a href="https://pay.kiwify.com.br/seu-checkout" style="
           display: inline-block;
           background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
           color: white;
-          padding: 15px 30px;
+          padding: clamp(12px, 3vw, 15px) clamp(20px, 5vw, 30px);
           border-radius: 50px;
-          font-weight: 600;
+          font-weight: 700;
           text-decoration: none;
-          margin-top: 20px;
-          font-size: 1.1rem;
+          margin-top: 15px;
+          font-size: clamp(0.9rem, 3vw, 1.1rem);
           box-shadow: 0 5px 15px rgba(249,127,107,0.3);
+          width: 90%;
+          max-width: 300px;
+          text-align: center;
+          animation: pulse 2s infinite;
           ">
           QUERO APROVEITAR AGORA! →
         </a>
+        
+        <p style="font-size: clamp(0.7rem, 2.5vw, 0.8rem); color: #999; margin-top: 15px;">
+          * Oferta válida apenas neste momento
+        </p>
       `;
 
       modal.appendChild(content);
@@ -1882,9 +1912,25 @@
             from { opacity: 0; }
             to { opacity: 1; }
           }
+          @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+          }
           @keyframes scaleIn {
             from { transform: scale(0.8); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
+          }
+          @keyframes scaleOut {
+            from { transform: scale(1); opacity: 1; }
+            to { transform: scale(0.8); opacity: 0; }
+          }
+          @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+          }
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(249,127,107,0.4); }
           }
         `;
         document.head.appendChild(style);
